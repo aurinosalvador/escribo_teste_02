@@ -1,4 +1,4 @@
-import 'package:escribo_teste_02/view/home.dart';
+import 'package:escribo_teste_02/views/home.dart';
 import 'package:flutter/material.dart';
 
 void main() {
