@@ -116,81 +116,109 @@ class _HomeState extends State<Home> {
     100: const Point(0, 509),
   };
 
-  double positionX = 0;
-  double positionY = 5;
-
   @override
   Widget build(BuildContext context) {
-    return FittedBox(
-      child: Consumer<CobrasEscadas>(
-        builder: (context, provider, _) {
-          return Stack(
-            clipBehavior: Clip.none,
-            children: <Widget>[
-              ///Tabuleiro casa = 58 x 58
-              Image.asset('lib/assets/tabuleiro.png'),
-
-              Row(
+    return Consumer<CobrasEscadas>(
+      builder: (context, provider, _) {
+        return Scaffold(
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: Colors.grey,
+            child: FittedBox(
+              child: Row(
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      provider.playerAction();
-                      setState(() {
-                        positionX = squares.entries
-                            .elementAt(provider.jogador1.getPosition())
-                            .value
-                            .x
-                            .toDouble();
-                        positionY = squares.entries
-                            .elementAt(provider.jogador1.getPosition())
-                            .value
-                            .y
-                            .toDouble();
-                      });
-                    },
-                    child: const Text('Jogar'),
+                  /// Ações
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          provider.playingNow == 1 ? 'Jogador 1' : 'Jogador 2',
+                        ),
+                        Text(
+                          'Dados: ${provider.dice1} + ${provider.dice2} = '
+                          '${provider.dice1 + provider.dice2}',
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            provider.playerAction();
+                          },
+                          child: const Text('Jogar'),
+                        ),
+                      ],
+                    ),
                   ),
-                  // ElevatedButton(
-                  //   onPressed: () {
-                  //     setState(() {
-                  //       positionX =
-                  //           squares.entries.elementAt(28).value.x.toDouble();
-                  //       positionY =
-                  //           squares.entries.elementAt(28).value.y.toDouble();
-                  //     });
-                  //   },
-                  //   child: const Text('Reset'),
-                  // ),
+
+                  ///Tabuleiro
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: <Widget>[
+                      ///Tabuleiro casa = 58 x 58
+                      Image.asset('lib/assets/tabuleiro.png'),
+
+                      ///Jogador 1
+                      AnimatedPositioned(
+                        curve: Curves.easeIn,
+                        left: squares[provider.getPlayerPosition(1)]!
+                            .x
+                            .toDouble(),
+                        bottom: squares[provider.getPlayerPosition(1)]!
+                            .y
+                            .toDouble(),
+                        duration: const Duration(milliseconds: 500),
+                        child: Image.asset(
+                          'lib/assets/pino.png',
+                          width: 30,
+                          height: 30,
+                        ),
+                      ),
+
+                      ///Jogador 2
+                      AnimatedPositioned(
+                        curve: Curves.easeIn,
+                        left: squares[provider.getPlayerPosition(2)]!
+                                .x
+                                .toDouble() +
+                            30.0,
+                        bottom: squares[provider.getPlayerPosition(2)]!
+                            .y
+                            .toDouble(),
+                        duration: const Duration(milliseconds: 500),
+                        child: Image.asset(
+                          'lib/assets/pino.png',
+                          width: 30,
+                          height: 30,
+                        ),
+                      ),
+
+                      if (provider.showMessage)
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 500),
+                          child: AlertDialog(
+                            title: Text(provider.messageTitle),
+                            content: Text(provider.messageText),
+                            actions: <Widget>[
+                              ElevatedButton(
+                                onPressed: () => provider.closeMessage(),
+                                child: const Text(
+                                  'Fechar',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
                 ],
               ),
-
-              ///Jogador 1
-              AnimatedPositioned(
-                curve: Curves.easeIn,
-                left: positionX,
-                bottom: positionY,
-                duration: const Duration(milliseconds: 500),
-                child: Image.asset(
-                  'lib/assets/pino.png',
-                  width: 30,
-                  height: 30,
-                ),
-              ),
-
-              ///Jogador 2
-              Positioned(
-                left: 1 * 56 - 26,
-                bottom: (1 - 1) * 56 + 5,
-                child: Image.asset(
-                  'lib/assets/pino.png',
-                  width: 30,
-                  height: 30,
-                ),
-              ),
-            ],
-          );
-        },
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
