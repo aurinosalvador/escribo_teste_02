@@ -4,9 +4,8 @@ class Player {
   final int _playerId;
   int _position;
   Color _color;
-  String _name;
 
-  Player(this._playerId, this._position, this._color, this._name);
+  Player(this._playerId, this._position, this._color);
 
   int getPlayerId() {
     return _playerId;
@@ -16,12 +15,6 @@ class Player {
 
   void setPosition(int position) {
     _position = position;
-  }
-
-  String getName() => _name;
-
-  void setName(String name) {
-    _name = name;
   }
 
   Color getColor() => _color;

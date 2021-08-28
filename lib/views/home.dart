@@ -129,9 +129,12 @@ class _HomeState extends State<Home> {
             color: Colors.grey,
             child: Column(
               children: [
-                Text(
-                  provider.playingNow == 1 ? 'Jogador 1' : 'Jogador 2',
-                  style: GoogleFonts.lobster(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(
+                    provider.playingNow == 1 ? 'Jogador 1' : 'Jogador 2',
+                    style: GoogleFonts.lobster(fontSize: 48),
+                  ),
                 ),
                 Text(
                   'Dados: ${provider.dice1} + ${provider.dice2} = '
@@ -150,22 +153,21 @@ class _HomeState extends State<Home> {
                         clipBehavior: Clip.none,
                         children: <Widget>[
                           ///Tabuleiro casa = 58 x 58
-                          Image.asset(
-                              'assets/tabuleiro.png'), // todo: alterar lugar
+                          Image.asset('assets/tabuleiro.png'),
 
                           ///Jogador 1
                           AnimatedPositioned(
                             // curve: Curves.easeIn,
-                            left: squares[provider.getPlayerPosition(1)]!
+                            left: squares[provider.jogador1.getPosition()]!
                                 .x
                                 .toDouble(),
-                            bottom: squares[provider.getPlayerPosition(1)]!
+                            bottom: squares[provider.jogador1.getPosition()]!
                                 .y
                                 .toDouble(),
                             duration: const Duration(milliseconds: 500),
                             child: SvgPicture.asset(
                               'assets/pin.svg',
-                              color: Colors.deepPurple,
+                              color: provider.jogador1.getColor(),
                               width: 30.0,
                               height: 30.0,
                             ),
@@ -174,56 +176,59 @@ class _HomeState extends State<Home> {
                           ///Jogador 2
                           AnimatedPositioned(
                             // curve: Curves.easeIn,
-                            left: squares[provider.getPlayerPosition(2)]!
+                            left: squares[provider.jogador2.getPosition()]!
                                     .x
                                     .toDouble() +
                                 30.0,
-                            bottom: squares[provider.getPlayerPosition(2)]!
+                            bottom: squares[provider.jogador2.getPosition()]!
                                 .y
                                 .toDouble(),
                             duration: const Duration(milliseconds: 500),
                             child: SvgPicture.asset(
                               'assets/pin.svg',
-                              // color: provider.,
+                              color: provider.jogador2.getColor(),
                               width: 30.0,
                               height: 30.0,
                             ),
                           ),
+
+                          if (provider.showMessage)
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 500),
+                              child: AlertDialog(
+                                title: Text(provider.messageTitle),
+                                content: Text(provider.messageText),
+                                actions: <Widget>[
+                                  ElevatedButton(
+                                    onPressed: () => provider.closeMessage(),
+                                    child: const Text(
+                                      'Fechar',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                         ],
                       ),
                     ),
                   ),
                 ),
 
-                if (provider.showMessage)
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 500),
-                    child: AlertDialog(
-                      title: Text(provider.messageTitle),
-                      content: Text(provider.messageText),
-                      actions: <Widget>[
-                        ElevatedButton(
-                          onPressed: () => provider.closeMessage(),
-                          child: const Text(
-                            'Fechar',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
                 /// Ações
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       ElevatedButton(
                         onPressed: () {
                           provider.playerAction();
                         },
+                        style: ElevatedButton.styleFrom(
+                          primary: provider.getButtonColor(),
+                        ),
                         child: const Text('Jogar'),
                       ),
                     ],

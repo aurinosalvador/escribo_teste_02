@@ -28,8 +28,8 @@ class CobrasEscadas with ChangeNotifier {
     99: 80,
   };
 
-  Player jogador1 = Player(1, 0);
-  Player jogador2 = Player(2, 0);
+  Player jogador1 = Player(1, 0, Colors.deepPurple);
+  Player jogador2 = Player(2, 0, Colors.deepOrange);
 
   bool showMessage = false;
   String messageTitle = '';
@@ -119,9 +119,8 @@ class CobrasEscadas with ChangeNotifier {
     }
   }
 
-  int getPlayerPosition(int player) {
-    Player jogador = player == 1 ? jogador1 : jogador2;
-    return jogador.getPosition();
+  Color getButtonColor() {
+    return playingNow == 1 ? jogador1.getColor() : jogador2.getColor();
   }
 
   void closeMessage() {
