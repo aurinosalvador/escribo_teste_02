@@ -1,18 +1,18 @@
 class Jogador {
-  int playerId;
-  int position;
+  final int _playerId;
+  int _position;
 
-  Jogador(this.playerId, this.position);
+  Jogador(this._playerId, this._position);
 
   int getPosition() {
-    return position;
+    return _position;
   }
 
   void setPosition(int position) {
-    this.position = position;
+    _position = position;
   }
 
   int getPlayerId() {
-    return playerId;
+    return _playerId;
   }
 }

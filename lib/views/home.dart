@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:escribo_teste_02/controllers/cobras_escadas.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -116,80 +117,79 @@ class _HomeState extends State<Home> {
   };
 
   double positionX = 0;
-  double positionY = 0;
+  double positionY = 5;
 
   @override
   Widget build(BuildContext context) {
     return FittedBox(
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: <Widget>[
-          ///Tabuleiro casa = 58 x 58
-          Image.asset('lib/assets/tabuleiro.png'),
+      child: Consumer<CobrasEscadas>(
+        builder: (context, provider, _) {
+          return Stack(
+            clipBehavior: Clip.none,
+            children: <Widget>[
+              ///Tabuleiro casa = 58 x 58
+              Image.asset('lib/assets/tabuleiro.png'),
 
-          // ElevatedButton(
-          //   onPressed: () async {
-          //     print('init');
-          //     for (int i = 1; i <= 100; i++) {
-          //       await Future.delayed(const Duration(milliseconds: 500), () {
-          //         // print(squares.entries.elementAt(i));
-          //         setState(() {
-          //           positionX = squares.entries.elementAt(i).value.x.toDouble();
-          //           positionY = squares.entries.elementAt(i).value.y.toDouble();
-          //         });
-          //       });
-          //     }
-          //   },
-          //   child: const Text('Calcular'),
-          // ),
-
-          Row(
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  CobrasEscadas controller = CobrasEscadas();
-                  print(controller.hasStair(46));
-                },
-                child: const Text('Calcular'),
+              Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      provider.playerAction();
+                      setState(() {
+                        positionX = squares.entries
+                            .elementAt(provider.jogador1.getPosition())
+                            .value
+                            .x
+                            .toDouble();
+                        positionY = squares.entries
+                            .elementAt(provider.jogador1.getPosition())
+                            .value
+                            .y
+                            .toDouble();
+                      });
+                    },
+                    child: const Text('Jogar'),
+                  ),
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     setState(() {
+                  //       positionX =
+                  //           squares.entries.elementAt(28).value.x.toDouble();
+                  //       positionY =
+                  //           squares.entries.elementAt(28).value.y.toDouble();
+                  //     });
+                  //   },
+                  //   child: const Text('Reset'),
+                  // ),
+                ],
               ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    positionX =
-                        squares.entries.elementAt(28).value.x.toDouble();
-                    positionY =
-                        squares.entries.elementAt(28).value.y.toDouble();
-                  });
-                },
-                child: const Text('Reset'),
+
+              ///Jogador 1
+              AnimatedPositioned(
+                curve: Curves.easeIn,
+                left: positionX,
+                bottom: positionY,
+                duration: const Duration(milliseconds: 500),
+                child: Image.asset(
+                  'lib/assets/pino.png',
+                  width: 30,
+                  height: 30,
+                ),
+              ),
+
+              ///Jogador 2
+              Positioned(
+                left: 1 * 56 - 26,
+                bottom: (1 - 1) * 56 + 5,
+                child: Image.asset(
+                  'lib/assets/pino.png',
+                  width: 30,
+                  height: 30,
+                ),
               ),
             ],
-          ),
-
-          ///Jogador 1
-          AnimatedPositioned(
-            curve: Curves.easeIn,
-            left: positionX,
-            bottom: positionY,
-            duration: const Duration(milliseconds: 500),
-            child: Image.asset(
-              'lib/assets/pino.png',
-              width: 30,
-              height: 30,
-            ),
-          ),
-
-          ///Jogador 2
-          Positioned(
-            left: 1 * 56 - 26,
-            bottom: (2 - 1) * 56 + 5,
-            child: Image.asset(
-              'lib/assets/pino.png',
-              width: 30,
-              height: 30,
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

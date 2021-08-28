@@ -1,5 +1,7 @@
+import 'package:escribo_teste_02/controllers/cobras_escadas.dart';
 import 'package:escribo_teste_02/views/home.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +18,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Home(),
+      home: ChangeNotifierProvider(
+        create: (_) => CobrasEscadas(),
+        child: const Home(),
+      ),
     );
   }
 }
