@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:escribo_teste_02/models/jogador.dart';
+import 'package:escribo_teste_02/models/player.dart';
 import 'package:flutter/material.dart';
 
 class CobrasEscadas with ChangeNotifier {
@@ -28,10 +28,8 @@ class CobrasEscadas with ChangeNotifier {
     99: 80,
   };
 
-  Jogador jogador1 = Jogador(1, 0);
-  Jogador jogador2 = Jogador(2, 0);
-
-  bool endGame = false;
+  Player jogador1 = Player(1, 0);
+  Player jogador2 = Player(2, 0);
 
   bool showMessage = false;
   String messageTitle = '';
@@ -48,63 +46,81 @@ class CobrasEscadas with ChangeNotifier {
 
   void playerAction() {
     _rollDices();
-    jogar(dice1, dice2);
+    play(dice1, dice2);
   }
 
-  void hasTrail(Jogador jogadorAtual, int moveTo) {
-    if (_fromTo.keys.contains(moveTo)) {
-      if (moveTo > _fromTo[moveTo]!) {
+  void hasSnakeOrLadder(Player actualPlayer) {
+    int position = actualPlayer.getPosition();
+    if (_fromTo.keys.contains(position)) {
+      int moveTo = _fromTo[position]!;
+      showMessage = true;
+      if (position > moveTo) {
         //cobra
-        showMessage = true;
         messageTitle = 'Azar!';
-        messageText =
-            'A cobra picou você, volte para a casa ${_fromTo[moveTo]!}';
-        print('Snake Move to: ${_fromTo[moveTo]!}');
-        jogadorAtual.setPosition(_fromTo[moveTo]!);
+        messageText = 'A cobra picou você, volte para a casa $moveTo';
+        print('Snake Move to: $moveTo');
       } else {
         //escada
-        showMessage = true;
         messageTitle = 'Sorte!';
-        messageText =
-            'Você encontrou uma escada, suba para a casa ${_fromTo[moveTo]!}';
-        print('Stair Move to: ${_fromTo[moveTo]!}');
-        jogadorAtual.setPosition(_fromTo[moveTo]!);
+        messageText = 'Você encontrou uma escada, suba para a casa $moveTo';
+        print('Ladder Move to: $moveTo');
       }
+      actualPlayer.setPosition(moveTo);
     }
   }
 
-  void jogar(int dice1, int dice2) {
+  void play(int dice1, int dice2) async {
     int dices = dice1 + dice2;
-    Jogador jogadorAtual = playingNow == 1 ? jogador1 : jogador2;
-    int moveTo = jogadorAtual.getPosition() + dices;
+    Player actualPlayer = playingNow == 1 ? jogador1 : jogador2;
+    int actualPosition = actualPlayer.getPosition();
+    int moveTo = actualPosition + dices;
 
     //Verify Player Movement
     if (moveTo > 100) {
       int afterLastSquare = moveTo - 100;
-      jogadorAtual.setPosition(100 - afterLastSquare);
+      // actualPlayer.setPosition(100 - afterLastSquare);
+      await movePlayer(actualPlayer, 100 - afterLastSquare);
       print('Player $playingNow Move to: ${100 - afterLastSquare}');
       //Verify has Snake or Stair
-      hasTrail(jogadorAtual, 100 - afterLastSquare);
+      // hasSnakeOrLadder(actualPlayer);
     } else if (moveTo == 100) {
-      endGame = true;
       showMessage = true;
       messageTitle = 'Vencedor!';
       messageText = 'O ${playingNow == 1 ? 'Jogador 1' : 'Jogador 2'} venceu!';
-      jogadorAtual.setPosition(moveTo);
+      // actualPlayer.setPosition(moveTo);
+      await movePlayer(actualPlayer, moveTo);
       print('Player $playingNow Move to: $moveTo');
     } else {
-      jogadorAtual.setPosition(moveTo);
+      // actualPlayer.setPosition(moveTo);
+      await movePlayer(actualPlayer, moveTo);
       print('Player $playingNow Move to: $moveTo');
       //Verify has Snake or Stair
-      hasTrail(jogadorAtual, moveTo);
+      // hasSnakeOrLadder(actualPlayer);
     }
-    notifyListeners();
 
-    playingNow = playingNow == 1 ? 2 : 1;
+    hasSnakeOrLadder(actualPlayer);
+
+    if (dice1 != dice2) {
+      playingNow = playingNow == 1 ? 2 : 1;
+    } else {
+      showMessage = true;
+      messageTitle = 'Sorte!';
+      messageText = 'Dados iguais, jogue novamente!';
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> movePlayer(Player player, int to) async {
+    for (int i = player.getPosition(); i <= to; i++) {
+      player.setPosition(i);
+      notifyListeners();
+      await Future.delayed(const Duration(milliseconds: 600));
+    }
   }
 
   int getPlayerPosition(int player) {
-    Jogador jogador = player == 1 ? jogador1 : jogador2;
+    Player jogador = player == 1 ? jogador1 : jogador2;
     return jogador.getPosition();
   }
 

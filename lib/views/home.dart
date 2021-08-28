@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:escribo_teste_02/controllers/cobras_escadas.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -125,96 +127,109 @@ class _HomeState extends State<Home> {
             width: double.infinity,
             height: double.infinity,
             color: Colors.grey,
-            child: FittedBox(
-              child: Row(
-                children: [
-                  /// Ações
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          provider.playingNow == 1 ? 'Jogador 1' : 'Jogador 2',
-                        ),
-                        Text(
-                          'Dados: ${provider.dice1} + ${provider.dice2} = '
-                          '${provider.dice1 + provider.dice2}',
-                        ),
+            child: Column(
+              children: [
+                Text(
+                  provider.playingNow == 1 ? 'Jogador 1' : 'Jogador 2',
+                  style: GoogleFonts.lobster(),
+                ),
+                Text(
+                  'Dados: ${provider.dice1} + ${provider.dice2} = '
+                  '${provider.dice1 + provider.dice2}',
+                ),
+
+                ///Tabuleiro
+                Expanded(
+                  child: FittedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 68.0,
+                        vertical: 8.0,
+                      ),
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: <Widget>[
+                          ///Tabuleiro casa = 58 x 58
+                          Image.asset(
+                              'assets/tabuleiro.png'), // todo: alterar lugar
+
+                          ///Jogador 1
+                          AnimatedPositioned(
+                            // curve: Curves.easeIn,
+                            left: squares[provider.getPlayerPosition(1)]!
+                                .x
+                                .toDouble(),
+                            bottom: squares[provider.getPlayerPosition(1)]!
+                                .y
+                                .toDouble(),
+                            duration: const Duration(milliseconds: 500),
+                            child: SvgPicture.asset(
+                              'assets/pin.svg',
+                              color: Colors.deepPurple,
+                              width: 30.0,
+                              height: 30.0,
+                            ),
+                          ),
+
+                          ///Jogador 2
+                          AnimatedPositioned(
+                            // curve: Curves.easeIn,
+                            left: squares[provider.getPlayerPosition(2)]!
+                                    .x
+                                    .toDouble() +
+                                30.0,
+                            bottom: squares[provider.getPlayerPosition(2)]!
+                                .y
+                                .toDouble(),
+                            duration: const Duration(milliseconds: 500),
+                            child: SvgPicture.asset(
+                              'assets/pin.svg',
+                              // color: provider.,
+                              width: 30.0,
+                              height: 30.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                if (provider.showMessage)
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
+                    child: AlertDialog(
+                      title: Text(provider.messageTitle),
+                      content: Text(provider.messageText),
+                      actions: <Widget>[
                         ElevatedButton(
-                          onPressed: () {
-                            provider.playerAction();
-                          },
-                          child: const Text('Jogar'),
+                          onPressed: () => provider.closeMessage(),
+                          child: const Text(
+                            'Fechar',
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ],
                     ),
                   ),
 
-                  ///Tabuleiro
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: <Widget>[
-                      ///Tabuleiro casa = 58 x 58
-                      Image.asset('lib/assets/tabuleiro.png'),
-
-                      ///Jogador 1
-                      AnimatedPositioned(
-                        curve: Curves.easeIn,
-                        left: squares[provider.getPlayerPosition(1)]!
-                            .x
-                            .toDouble(),
-                        bottom: squares[provider.getPlayerPosition(1)]!
-                            .y
-                            .toDouble(),
-                        duration: const Duration(milliseconds: 500),
-                        child: Image.asset(
-                          'lib/assets/pino.png',
-                          width: 30,
-                          height: 30,
-                        ),
+                /// Ações
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          provider.playerAction();
+                        },
+                        child: const Text('Jogar'),
                       ),
-
-                      ///Jogador 2
-                      AnimatedPositioned(
-                        curve: Curves.easeIn,
-                        left: squares[provider.getPlayerPosition(2)]!
-                                .x
-                                .toDouble() +
-                            30.0,
-                        bottom: squares[provider.getPlayerPosition(2)]!
-                            .y
-                            .toDouble(),
-                        duration: const Duration(milliseconds: 500),
-                        child: Image.asset(
-                          'lib/assets/pino.png',
-                          width: 30,
-                          height: 30,
-                        ),
-                      ),
-
-                      if (provider.showMessage)
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 500),
-                          child: AlertDialog(
-                            title: Text(provider.messageTitle),
-                            content: Text(provider.messageText),
-                            actions: <Widget>[
-                              ElevatedButton(
-                                onPressed: () => provider.closeMessage(),
-                                child: const Text(
-                                  'Fechar',
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );
