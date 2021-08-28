@@ -39,9 +39,13 @@ class CobrasEscadas with ChangeNotifier {
   int dice1 = 0;
   int dice2 = 0;
 
+  bool isPlaying = false;
+
   void _rollDices() {
-    dice1 = Random().nextInt(6) + 1;
-    dice2 = Random().nextInt(6) + 1;
+    if (!isPlaying) {
+      dice1 = Random().nextInt(6) + 1;
+      dice2 = Random().nextInt(6) + 1;
+    }
   }
 
   void playerAction() {
@@ -58,11 +62,13 @@ class CobrasEscadas with ChangeNotifier {
         //cobra
         messageTitle = 'Azar!';
         messageText = 'A cobra picou você, volte para a casa $moveTo';
+        closeMessage();
         print('Snake Move to: $moveTo');
       } else {
         //escada
         messageTitle = 'Sorte!';
         messageText = 'Você encontrou uma escada, suba para a casa $moveTo';
+        closeMessage();
         print('Ladder Move to: $moveTo');
       }
       actualPlayer.setPosition(moveTo);
@@ -74,49 +80,61 @@ class CobrasEscadas with ChangeNotifier {
     Player actualPlayer = playingNow == 1 ? jogador1 : jogador2;
     int actualPosition = actualPlayer.getPosition();
     int moveTo = actualPosition + dices;
+    if (!isPlaying) {
+      //Verify Player Movement
+      if (moveTo > 100) {
+        int afterLastSquare = moveTo - 100;
+        // actualPlayer.setPosition(100 - afterLastSquare);
+        await movePlayer(actualPlayer, 100 - afterLastSquare);
+        print('Player $playingNow Move to: ${100 - afterLastSquare}');
+        //Verify has Snake or Stair
+        // hasSnakeOrLadder(actualPlayer);
+      } else if (moveTo == 100) {
+        showMessage = true;
+        messageTitle = 'Vencedor!';
+        messageText =
+            'O ${playingNow == 1 ? 'Jogador 1' : 'Jogador 2'} venceu!';
+        closeMessage();
+        // actualPlayer.setPosition(moveTo);
+        await movePlayer(actualPlayer, moveTo);
+        print('Player $playingNow Move to: $moveTo');
+      } else {
+        // actualPlayer.setPosition(moveTo);
+        await movePlayer(actualPlayer, moveTo);
+        print('Player $playingNow Move to: $moveTo');
+        //Verify has Snake or Stair
+        // hasSnakeOrLadder(actualPlayer);
+      }
 
-    //Verify Player Movement
-    if (moveTo > 100) {
-      int afterLastSquare = moveTo - 100;
-      // actualPlayer.setPosition(100 - afterLastSquare);
-      await movePlayer(actualPlayer, 100 - afterLastSquare);
-      print('Player $playingNow Move to: ${100 - afterLastSquare}');
-      //Verify has Snake or Stair
-      // hasSnakeOrLadder(actualPlayer);
-    } else if (moveTo == 100) {
-      showMessage = true;
-      messageTitle = 'Vencedor!';
-      messageText = 'O ${playingNow == 1 ? 'Jogador 1' : 'Jogador 2'} venceu!';
-      // actualPlayer.setPosition(moveTo);
-      await movePlayer(actualPlayer, moveTo);
-      print('Player $playingNow Move to: $moveTo');
+      hasSnakeOrLadder(actualPlayer);
+
+      if (dice1 != dice2) {
+        playingNow = playingNow == 1 ? 2 : 1;
+      } else {
+        showMessage = true;
+        messageTitle = 'Sorte!';
+        messageText = 'Dados iguais, jogue novamente!';
+        closeMessage();
+      }
     } else {
-      // actualPlayer.setPosition(moveTo);
-      await movePlayer(actualPlayer, moveTo);
-      print('Player $playingNow Move to: $moveTo');
-      //Verify has Snake or Stair
-      // hasSnakeOrLadder(actualPlayer);
-    }
-
-    hasSnakeOrLadder(actualPlayer);
-
-    if (dice1 != dice2) {
-      playingNow = playingNow == 1 ? 2 : 1;
-    } else {
       showMessage = true;
-      messageTitle = 'Sorte!';
-      messageText = 'Dados iguais, jogue novamente!';
+      messageTitle = 'Aguarde!';
+      messageText =
+          'O ${playingNow == 1 ? 'Jogador 1' : 'Jogador 2'} está na casa $moveTo!';
+      closeMessage();
     }
 
     notifyListeners();
   }
 
   Future<void> movePlayer(Player player, int to) async {
+    isPlaying = true;
     for (int i = player.getPosition(); i <= to; i++) {
       player.setPosition(i);
       notifyListeners();
-      await Future.delayed(const Duration(milliseconds: 600));
+      await Future.delayed(const Duration(milliseconds: 800));
     }
+    isPlaying = false;
   }
 
   Color getButtonColor() {
@@ -124,7 +142,9 @@ class CobrasEscadas with ChangeNotifier {
   }
 
   void closeMessage() {
-    showMessage = false;
-    notifyListeners();
+    Future.delayed(const Duration(milliseconds: 2000), () {
+      showMessage = false;
+      notifyListeners();
+    });
   }
 }

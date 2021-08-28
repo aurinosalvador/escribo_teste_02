@@ -118,6 +118,8 @@ class _HomeState extends State<Home> {
     100: const Point(0, 509),
   };
 
+  bool teste = true;
+
   @override
   Widget build(BuildContext context) {
     return Consumer<CobrasEscadas>(
@@ -126,7 +128,7 @@ class _HomeState extends State<Home> {
           body: Container(
             width: double.infinity,
             height: double.infinity,
-            color: Colors.grey,
+            color: provider.getButtonColor().withOpacity(0.3),
             child: Column(
               children: [
                 Padding(
@@ -136,10 +138,35 @@ class _HomeState extends State<Home> {
                     style: GoogleFonts.lobster(fontSize: 48),
                   ),
                 ),
-                Text(
-                  'Dados: ${provider.dice1} + ${provider.dice2} = '
-                  '${provider.dice1 + provider.dice2}',
-                ),
+                if (provider.dice1 != 0)
+                  SizedBox(
+                    height: 50,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Container(
+                            width: 24,
+                            color: Colors.white,
+                            child: Image.asset(
+                              'assets/dice-${provider.dice1}.png',
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: 24,
+                          color: Colors.white,
+                          child: Image.asset(
+                            'assets/dice-${provider.dice2}.png',
+                          ),
+                        ),
+                        Text(' = ${provider.dice1 + provider.dice2}'),
+                      ],
+                    ),
+                  )
+                else
+                  Text('.......'),
 
                 ///Tabuleiro
                 Expanded(
@@ -150,6 +177,7 @@ class _HomeState extends State<Home> {
                         vertical: 8.0,
                       ),
                       child: Stack(
+                        alignment: Alignment.topCenter,
                         clipBehavior: Clip.none,
                         children: <Widget>[
                           ///Tabuleiro casa = 58 x 58
@@ -164,12 +192,12 @@ class _HomeState extends State<Home> {
                             bottom: squares[provider.jogador1.getPosition()]!
                                 .y
                                 .toDouble(),
-                            duration: const Duration(milliseconds: 500),
+                            duration: const Duration(milliseconds: 600),
                             child: SvgPicture.asset(
                               'assets/pin.svg',
                               color: provider.jogador1.getColor(),
-                              width: 30.0,
-                              height: 30.0,
+                              width: provider.playingNow == 1 ? 36.0 : 30.0,
+                              height: provider.playingNow == 1 ? 36.0 : 30.0,
                             ),
                           ),
 
@@ -183,32 +211,34 @@ class _HomeState extends State<Home> {
                             bottom: squares[provider.jogador2.getPosition()]!
                                 .y
                                 .toDouble(),
-                            duration: const Duration(milliseconds: 500),
+                            duration: const Duration(milliseconds: 600),
                             child: SvgPicture.asset(
                               'assets/pin.svg',
                               color: provider.jogador2.getColor(),
-                              width: 30.0,
-                              height: 30.0,
+                              width: provider.playingNow == 2 ? 34.0 : 30.0,
+                              height: provider.playingNow == 2 ? 34.0 : 30.0,
                             ),
                           ),
 
-                          if (provider.showMessage)
-                            AnimatedContainer(
-                              duration: const Duration(milliseconds: 500),
-                              child: AlertDialog(
-                                title: Text(provider.messageTitle),
-                                content: Text(provider.messageText),
-                                actions: <Widget>[
-                                  ElevatedButton(
-                                    onPressed: () => provider.closeMessage(),
-                                    child: const Text(
-                                      'Fechar',
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ],
+                          // if ()
+                          AnimatedOpacity(
+                            opacity: provider.showMessage ? 1.0 : 0.0,
+                            duration: const Duration(milliseconds: 400),
+                            child: AlertDialog(
+                              title: Text(
+                                provider.messageTitle,
+                                // 'teste',
+                                style: GoogleFonts.lobster(),
+                                textAlign: TextAlign.center,
+                              ),
+                              content: Text(
+                                provider.messageText,
+                                // 'teste',
+                                style: GoogleFonts.lobster(),
+                                textAlign: TextAlign.center,
                               ),
                             ),
+                          ),
                         ],
                       ),
                     ),
