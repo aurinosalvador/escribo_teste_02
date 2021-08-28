@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:escribo_teste_02/controllers/cobras_escadas.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -115,7 +116,6 @@ class _HomeState extends State<Home> {
   };
 
   double positionX = 0;
-
   double positionY = 0;
 
   @override
@@ -147,12 +147,8 @@ class _HomeState extends State<Home> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  setState(() {
-                    positionX =
-                        squares.entries.elementAt(84).value.x.toDouble();
-                    positionY =
-                        squares.entries.elementAt(84).value.y.toDouble();
-                  });
+                  CobrasEscadas controller = CobrasEscadas();
+                  print(controller.hasStair(46));
                 },
                 child: const Text('Calcular'),
               ),
