@@ -201,7 +201,7 @@ class _HomeState extends State<Home> {
                             bottom: squares[provider.jogador1.getPosition()]!
                                 .y
                                 .toDouble(),
-                            duration: const Duration(milliseconds: 600),
+                            duration: const Duration(milliseconds: 400),
                             child: SvgPicture.asset(
                               'assets/pin.svg',
                               color: provider.jogador1.getColor(),
@@ -220,7 +220,7 @@ class _HomeState extends State<Home> {
                             bottom: squares[provider.jogador2.getPosition()]!
                                 .y
                                 .toDouble(),
-                            duration: const Duration(milliseconds: 600),
+                            duration: const Duration(milliseconds: 400),
                             child: SvgPicture.asset(
                               'assets/pin.svg',
                               color: provider.jogador2.getColor(),

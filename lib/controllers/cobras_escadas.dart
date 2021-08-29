@@ -52,7 +52,7 @@ class CobrasEscadas with ChangeNotifier {
       dice1 = Random().nextInt(6) + 1;
       dice2 = Random().nextInt(6) + 1;
 
-      await Future.delayed(const Duration(milliseconds: 2000));
+      await Future.delayed(const Duration(milliseconds: 1000));
 
       rolling = false;
       notifyListeners();
@@ -120,6 +120,8 @@ class CobrasEscadas with ChangeNotifier {
 
         if (dice1 != dice2) {
           playingNow = playingNow == 1 ? 2 : 1;
+          this.dice1 = 0;
+          this.dice2 = 0;
         }
       } else {
         showMessage = true;
@@ -143,18 +145,18 @@ class CobrasEscadas with ChangeNotifier {
       for (int i = player.getPosition(); i <= 100; i++) {
         player.setPosition(i);
         notifyListeners();
-        await Future.delayed(Duration(milliseconds: i == 100 ? 100 : 800));
+        await Future.delayed(Duration(milliseconds: i == 100 ? 100 : 600));
       }
       for (int i = 100; i >= to; i--) {
         player.setPosition(i);
         notifyListeners();
-        await Future.delayed(const Duration(milliseconds: 800));
+        await Future.delayed(const Duration(milliseconds: 600));
       }
     } else {
       for (int i = player.getPosition(); i <= to; i++) {
         player.setPosition(i);
         notifyListeners();
-        await Future.delayed(const Duration(milliseconds: 800));
+        await Future.delayed(const Duration(milliseconds: 600));
       }
     }
 
@@ -171,7 +173,7 @@ class CobrasEscadas with ChangeNotifier {
   }
 
   void closeMessageTimed() {
-    Future.delayed(const Duration(milliseconds: 2000), () {
+    Future.delayed(const Duration(milliseconds: 5000), () {
       closeMessage();
     });
   }
