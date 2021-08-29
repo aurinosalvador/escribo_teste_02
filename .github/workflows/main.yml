@@ -14,8 +14,7 @@ jobs:
           channel: 'beta'
       - run: flutter config --enable-web
       - run: flutter pub get
-      - run: |
-          flutter build web
+      - run: flutter build web
       - run: |
           cd build/web
           sed -i "s/main.dart.js/main.dart.js?v=$GITHUB_RUN_NUMBER/g" index.html
