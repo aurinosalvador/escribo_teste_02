@@ -128,11 +128,13 @@ class _HomeState extends State<Home> {
             height: double.infinity,
             color: provider.getButtonColor().withOpacity(0.3),
             child: Column(
+              // crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Text(
                     provider.playingNow == 1 ? 'Jogador 1' : 'Jogador 2',
+                    textAlign: TextAlign.center,
                     style: GoogleFonts.lobster(fontSize: 48),
                   ),
                 ),
@@ -207,6 +209,7 @@ class _HomeState extends State<Home> {
                               color: provider.jogador1.getColor(),
                               width: provider.playingNow == 1 ? 36.0 : 30.0,
                               height: provider.playingNow == 1 ? 36.0 : 30.0,
+                              fit: BoxFit.cover,
                             ),
                           ),
 
@@ -226,6 +229,7 @@ class _HomeState extends State<Home> {
                               color: provider.jogador2.getColor(),
                               width: provider.playingNow == 2 ? 34.0 : 30.0,
                               height: provider.playingNow == 2 ? 34.0 : 30.0,
+                              fit: BoxFit.cover,
                             ),
                           ),
 
@@ -280,20 +284,15 @@ class _HomeState extends State<Home> {
                 /// Ações
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          provider.playerAction();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: provider.getButtonColor(),
-                        ),
-                        child: const Text('Jogar'),
-                      ),
-                    ],
+                  child: ElevatedButton(
+                    onPressed: () {
+                      provider.playerAction();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: provider.getButtonColor(),
+                      minimumSize: const Size(785, 40),
+                    ),
+                    child: const Text('Jogar'),
                   ),
                 ),
               ],
