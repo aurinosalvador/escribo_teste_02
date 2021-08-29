@@ -22,7 +22,7 @@ jobs:
           git config --global user.email aurinosalvador@gmail.com
           git config --global user.name "Aurino Salvador"
           git status
-          git remote add origin https://${{secrets.commit_secret}}@github.com/aurinosalvador/escribo_teste_02.git
+          git remote add origin https://aurinosalvador:${{secrets.commit_secret}}@github.com/aurinosalvador/escribo_teste_02.git
           git checkout -b gh-pages
           git add --all
           git commit -m "Publishing web project ($GITHUB_RUN_NUMBER)."
