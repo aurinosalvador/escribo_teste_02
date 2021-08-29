@@ -35,6 +35,7 @@ class CobrasEscadas with ChangeNotifier {
   String messageTitle = '';
   String messageText = '';
 
+  int winnerPlayer = 0;
   int playingNow = 1;
   int dice1 = 0;
   int dice2 = 0;
@@ -42,7 +43,7 @@ class CobrasEscadas with ChangeNotifier {
   bool isPlaying = false;
 
   void _rollDices() {
-    if (!isPlaying) {
+    if (!isPlaying || winnerPlayer == 0) {
       dice1 = Random().nextInt(6) + 1;
       dice2 = Random().nextInt(6) + 1;
     }
@@ -81,39 +82,46 @@ class CobrasEscadas with ChangeNotifier {
     int actualPosition = actualPlayer.getPosition();
     int moveTo = actualPosition + dices;
     if (!isPlaying) {
-      //Verify Player Movement
-      if (moveTo > 100) {
-        int afterLastSquare = moveTo - 100;
-        // actualPlayer.setPosition(100 - afterLastSquare);
-        await movePlayer(actualPlayer, 100 - afterLastSquare);
-        print('Player $playingNow Move to: ${100 - afterLastSquare}');
-        //Verify has Snake or Stair
-        // hasSnakeOrLadder(actualPlayer);
-      } else if (moveTo == 100) {
-        showMessage = true;
-        messageTitle = 'Vencedor!';
-        messageText =
-            'O ${playingNow == 1 ? 'Jogador 1' : 'Jogador 2'} venceu!';
-        closeMessage();
-        // actualPlayer.setPosition(moveTo);
-        await movePlayer(actualPlayer, moveTo);
-        print('Player $playingNow Move to: $moveTo');
-      } else {
-        // actualPlayer.setPosition(moveTo);
-        await movePlayer(actualPlayer, moveTo);
-        print('Player $playingNow Move to: $moveTo');
-        //Verify has Snake or Stair
-        // hasSnakeOrLadder(actualPlayer);
-      }
+      if (winnerPlayer == 0) {
+        //Verify Player Movement
+        if (moveTo > 100) {
+          int afterLastSquare = moveTo - 100;
+          // actualPlayer.setPosition(100 - afterLastSquare);
+          await movePlayer(actualPlayer, 100 - afterLastSquare);
+          print('Player $playingNow Move to: ${100 - afterLastSquare}');
+          //Verify has Snake or Stair
+          // hasSnakeOrLadder(actualPlayer);
+        } else if (moveTo == 100) {
+          winnerPlayer = playingNow;
+          showMessage = true;
+          messageTitle = 'Vencedor!';
+          messageText =
+              'O ${playingNow == 1 ? 'Jogador 1' : 'Jogador 2'} venceu!';
+          closeMessage();
+          // actualPlayer.setPosition(moveTo);
+          await movePlayer(actualPlayer, moveTo);
+          print('Player $playingNow Move to: $moveTo');
+        } else {
+          // actualPlayer.setPosition(moveTo);
+          await movePlayer(actualPlayer, moveTo);
+          print('Player $playingNow Move to: $moveTo');
+          //Verify has Snake or Stair
+          // hasSnakeOrLadder(actualPlayer);
+        }
 
-      hasSnakeOrLadder(actualPlayer);
+        hasSnakeOrLadder(actualPlayer);
 
-      if (dice1 != dice2) {
-        playingNow = playingNow == 1 ? 2 : 1;
+        if (dice1 != dice2) {
+          playingNow = playingNow == 1 ? 2 : 1;
+        } else {
+          showMessage = true;
+          messageTitle = 'Sorte!';
+          messageText = 'Dados iguais, jogue novamente!';
+          closeMessage();
+        }
       } else {
         showMessage = true;
-        messageTitle = 'Sorte!';
-        messageText = 'Dados iguais, jogue novamente!';
+        messageText = 'O jogo acabou!';
         closeMessage();
       }
     } else {
