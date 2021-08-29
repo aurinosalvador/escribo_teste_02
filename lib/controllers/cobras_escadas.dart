@@ -43,7 +43,7 @@ class CobrasEscadas with ChangeNotifier {
   bool isPlaying = false;
 
   void _rollDices() {
-    if (!isPlaying || winnerPlayer == 0) {
+    if (!isPlaying && winnerPlayer == 0) {
       dice1 = Random().nextInt(6) + 1;
       dice2 = Random().nextInt(6) + 1;
     }
@@ -64,13 +64,13 @@ class CobrasEscadas with ChangeNotifier {
         messageTitle = 'Azar!';
         messageText = 'A cobra picou você, volte para a casa $moveTo';
         closeMessage();
-        print('Snake Move to: $moveTo');
+        // print('Snake Move to: $moveTo');
       } else {
         //escada
         messageTitle = 'Sorte!';
         messageText = 'Você encontrou uma escada, suba para a casa $moveTo';
         closeMessage();
-        print('Ladder Move to: $moveTo');
+        // print('Ladder Move to: $moveTo');
       }
       actualPlayer.setPosition(moveTo);
     }
@@ -86,11 +86,7 @@ class CobrasEscadas with ChangeNotifier {
         //Verify Player Movement
         if (moveTo > 100) {
           int afterLastSquare = moveTo - 100;
-          // actualPlayer.setPosition(100 - afterLastSquare);
           await movePlayer(actualPlayer, 100 - afterLastSquare);
-          print('Player $playingNow Move to: ${100 - afterLastSquare}');
-          //Verify has Snake or Stair
-          // hasSnakeOrLadder(actualPlayer);
         } else if (moveTo == 100) {
           winnerPlayer = playingNow;
           showMessage = true;
@@ -98,15 +94,9 @@ class CobrasEscadas with ChangeNotifier {
           messageText =
               'O ${playingNow == 1 ? 'Jogador 1' : 'Jogador 2'} venceu!';
           closeMessage();
-          // actualPlayer.setPosition(moveTo);
           await movePlayer(actualPlayer, moveTo);
-          print('Player $playingNow Move to: $moveTo');
         } else {
-          // actualPlayer.setPosition(moveTo);
           await movePlayer(actualPlayer, moveTo);
-          print('Player $playingNow Move to: $moveTo');
-          //Verify has Snake or Stair
-          // hasSnakeOrLadder(actualPlayer);
         }
 
         hasSnakeOrLadder(actualPlayer);
@@ -128,7 +118,7 @@ class CobrasEscadas with ChangeNotifier {
       showMessage = true;
       messageTitle = 'Aguarde!';
       messageText =
-          'O ${playingNow == 1 ? 'Jogador 1' : 'Jogador 2'} está na casa $moveTo!';
+          'O ${playingNow == 1 ? 'Jogador 1' : 'Jogador 2'} está na casa ${moveTo}!';
       closeMessage();
     }
 
@@ -154,5 +144,23 @@ class CobrasEscadas with ChangeNotifier {
       showMessage = false;
       notifyListeners();
     });
+  }
+
+  void reset() {
+    jogador1.setPosition(0);
+    jogador2.setPosition(0);
+
+    isPlaying = false;
+
+    showMessage = false;
+    messageTitle = '';
+    messageText = '';
+
+    winnerPlayer = 0;
+    playingNow = 1;
+    dice1 = 0;
+    dice2 = 0;
+
+    notifyListeners();
   }
 }

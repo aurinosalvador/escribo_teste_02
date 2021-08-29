@@ -118,13 +118,25 @@ class _HomeState extends State<Home> {
     100: const Point(0, 509),
   };
 
-  bool teste = true;
-
   @override
   Widget build(BuildContext context) {
     return Consumer<CobrasEscadas>(
       builder: (context, provider, _) {
         return Scaffold(
+          appBar: AppBar(
+            backgroundColor: provider.getButtonColor(),
+            title: Text(
+              'Cobras e Escadas',
+              style: GoogleFonts.lobster(fontSize: 24),
+            ),
+            centerTitle: true,
+            actions: [
+              IconButton(
+                onPressed: provider.reset,
+                icon: const Icon(Icons.refresh),
+              ),
+            ],
+          ),
           body: Container(
             width: double.infinity,
             height: double.infinity,
@@ -138,7 +150,7 @@ class _HomeState extends State<Home> {
                     style: GoogleFonts.lobster(fontSize: 48),
                   ),
                 ),
-                if (provider.dice1 != 0)
+                if (provider.dice1 != 0 && provider.dice2 != 0)
                   SizedBox(
                     height: 50,
                     child: Row(
@@ -166,7 +178,7 @@ class _HomeState extends State<Home> {
                     ),
                   )
                 else
-                  Text('.......'),
+                  const Text('.......'),
 
                 ///Tabuleiro
                 Expanded(
