@@ -25,27 +25,17 @@ jobs:
       - name: Build Web
         run: flutter build web
 
-      - name: Configure index.html
+      - name: Deploy
         run: |
           cd build/web
           sed -i 's#<base href="/">#<base href="/escribo_teste_02/">#g' index.html
           sed -i "s/main.dart.js/main.dart.js?v=$GITHUB_RUN_NUMBER/g" index.html
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          personal_token: ${{secrets.commit_secret}}
-          publish_dir: ./build/web
-#      - run: |
-#          cd build/web
-#          sed -i 's#<base href="/">#<base href="/escribo_teste_02/">#g' index.html
-#          sed -i "s/main.dart.js/main.dart.js?v=$GITHUB_RUN_NUMBER/g" index.html
-#          git init
-#          git config --global user.email aurinosalvador@gmail.com
-#          git config --global user.name "Aurino Salvador"
-#          git status
-#          git remote add origin https://${{secrets.commit_secret}}@github.com/aurinosalvador/escribo_teste_02.git
-#          git checkout -b gh-pages
-#          git add --all
-#          git commit -m "Publishing web project ($GITHUB_RUN_NUMBER)."
-#          git push origin gh-pages -f
+          git init
+          git config --global user.email aurinosalvador@gmail.com
+          git config --global user.name "Aurino Salvador"
+          git status
+          git remote add origin https://${{secrets.COMMIT_SECRET}}@github.com/aurinosalvador/escribo_teste_02.git
+          git checkout -b gh-pages
+          git add --all
+          git commit -m "Publishing web project ($GITHUB_RUN_NUMBER)."
+          git push origin gh-pages -f
