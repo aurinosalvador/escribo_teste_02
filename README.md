@@ -1,16 +1,36 @@
-# escribo_teste_02
+# Escribo Teste Técnico 02
+## Descrição
+O teste consiste em implementar a parte lógica e a interface do jogo indiano [Cobras e Escadas](https://en.wikipedia.org/wiki/Snakes_and_ladders).
 
-A new Flutter project.
+### Pré-requisitos
+Antes de começar, você vai precisar ter instalado o [Git](https://git-scm.com), [Android Studio](https://developer.android.com/studio?hl=pt) ou [adb](https://developer.android.com/studio/command-line/adb?hl=pt-br) e o [Flutter](https://flutter.dev/). Para testar no dispositivo android, será necessário [habilitar o modo depuração](https://flutter-examples.com/run-test-flutter-apps-directly-on-real-android-device/).
 
-## Getting Started
+### Executando o projeto
 
-This project is a starting point for a Flutter application.
+#### Clone o repositório
+ ```bash 
+ $ git clone https://github.com/aurinosalvador/escribo_teste_02.git
+ ```
 
-A few resources to get you started if this is your first Flutter project:
+#### Acesse a pasta do projeto no terminal/cmd
+ ```bash 
+ $ cd escribo_teste_02
+ ```
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+#### Instale as dependências
+ ```bash 
+ $ flutter pub get
+ ```
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+#### Execute o projeto web
+ ```bash 
+ $ flutter run -d chrome
+ ```
+
+#### Ou execute o projeto android, caso tenha habilitado o modo depuração.
+ ```bash 
+ $ flutter run
+ ```
+
+### Se preferir jogue online
+[Jogar Cobras e Escadas](https://aurinosalvador.github.io/escribo_teste_02/)
