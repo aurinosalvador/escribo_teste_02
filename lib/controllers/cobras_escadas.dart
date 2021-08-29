@@ -28,7 +28,7 @@ class CobrasEscadas with ChangeNotifier {
     99: 80,
   };
 
-  Player jogador1 = Player(1, 98, Colors.deepPurple);
+  Player jogador1 = Player(1, 0, Colors.deepPurple);
   Player jogador2 = Player(2, 0, Colors.deepOrange);
 
   bool showMessage = false;
@@ -78,6 +78,12 @@ class CobrasEscadas with ChangeNotifier {
 
   void play(int dice1, int dice2) async {
     int dices = dice1 + dice2;
+    if (dice1 == dice2) {
+      showMessage = true;
+      messageTitle = 'Sorte!';
+      messageText = 'Dados iguais, você ganhou uma nova jogada!';
+      closeMessageTimed();
+    }
     Player actualPlayer = playingNow == 1 ? jogador1 : jogador2;
     int actualPosition = actualPlayer.getPosition();
     int moveTo = actualPosition + dices;
@@ -102,14 +108,8 @@ class CobrasEscadas with ChangeNotifier {
 
         hasSnakeOrLadder(actualPlayer);
 
-        ///TODO: mudar lugar da mensagem pra quando for igual exibir de imediato
         if (dice1 != dice2) {
           playingNow = playingNow == 1 ? 2 : 1;
-        } else {
-          showMessage = true;
-          messageTitle = 'Sorte!';
-          messageText = 'Dados iguais, jogue novamente!';
-          closeMessageTimed();
         }
       } else {
         showMessage = true;
