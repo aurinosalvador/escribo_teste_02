@@ -28,7 +28,7 @@ jobs:
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          gituhub_token: ${{secrets.commit_secret}}
+          github_token: ${{secrets.commit_secret}}
           publish_dir: ./build/web
 #      - run: |
 #          cd build/web
