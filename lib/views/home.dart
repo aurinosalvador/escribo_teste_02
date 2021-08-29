@@ -131,7 +131,7 @@ class _HomeState extends State<Home> {
               // crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: const EdgeInsets.only(top: 20.0),
                   child: Text(
                     provider.playingNow == 1 ? 'Jogador 1' : 'Jogador 2',
                     textAlign: TextAlign.center,
