@@ -25,10 +25,16 @@ jobs:
       - name: Build Web
         run: flutter build web
 
+      - name: Configure index.html
+        run: |
+          cd build/web
+          sed -i 's#<base href="/">#<base href="/escribo_teste_02/">#g' index.html
+          sed -i "s/main.dart.js/main.dart.js?v=$GITHUB_RUN_NUMBER/g" index.html
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{secrets.commit_secret}}
+          personal_token: ${{secrets.commit_secret}}
           publish_dir: ./build/web
 #      - run: |
 #          cd build/web
