@@ -12,20 +12,19 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: 'beta'
-      - uses: erickzanardo/flutter-gh-pages@v6
-#      - run: flutter config --enable-web
-#      - run: flutter pub get
-#      - run: flutter build web
-#      - run: |
-#          cd build/web
-#          sed -i 's#<base href="/">#<base href="/escribo_teste_02/">#g' index.html
-#          sed -i "s/main.dart.js/main.dart.js?v=$GITHUB_RUN_NUMBER/g" index.html
-#          git init
-#          git config --global user.email aurinosalvador@gmail.com
-#          git config --global user.name "Aurino Salvador"
-#          git status
-#          git remote add origin https://${{secrets.commit_secret}}@github.com/aurinosalvador/escribo_teste_02.git
-#          git checkout -b gh-pages
-#          git add --all
-#          git commit -m "Publishing web project ($GITHUB_RUN_NUMBER)."
-#          git push origin gh-pages -f
+      - run: flutter config --enable-web
+      - run: flutter pub get
+      - run: flutter build web
+      - run: |
+          cd build/web
+          sed -i 's#<base href="/">#<base href="/escribo_teste_02/">#g' index.html
+          sed -i "s/main.dart.js/main.dart.js?v=$GITHUB_RUN_NUMBER/g" index.html
+          git init
+          git config --global user.email aurinosalvador@gmail.com
+          git config --global user.name "Aurino Salvador"
+          git status
+          git remote add origin https://${{secrets.commit_secret}}@github.com/aurinosalvador/escribo_teste_02.git
+          git checkout -b gh-pages
+          git add --all
+          git commit -m "Publishing web project ($GITHUB_RUN_NUMBER)."
+          git push origin gh-pages -f
