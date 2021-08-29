@@ -60,6 +60,9 @@ class CobrasEscadas with ChangeNotifier {
   }
 
   Future<void> playerAction() async {
+    showMessage = false;
+    notifyListeners();
+
     await _rollDices();
     play(dice1, dice2);
   }
@@ -173,7 +176,7 @@ class CobrasEscadas with ChangeNotifier {
   }
 
   void closeMessageTimed() {
-    Future.delayed(const Duration(milliseconds: 5000), () {
+    Future.delayed(const Duration(milliseconds: 4000), () {
       closeMessage();
     });
   }
