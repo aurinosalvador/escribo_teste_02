@@ -145,29 +145,37 @@ class _HomeState extends State<Home> {
                         Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: Container(
-                            width: 24,
-                            color: Colors.white,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.white,
+                            ),
                             child: Image.asset(
-                              'assets/dice-${provider.dice1}.png',
+                              provider.rolling
+                                  ? 'assets/rolling_dice.gif'
+                                  : 'assets/dice-${provider.dice1}.png',
                             ),
                           ),
                         ),
                         Container(
-                          width: 24,
-                          color: Colors.white,
+                          width: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.white,
+                          ),
                           child: Image.asset(
-                            'assets/dice-${provider.dice2}.png',
+                            provider.rolling
+                                ? 'assets/rolling_dice.gif'
+                                : 'assets/dice-${provider.dice2}.png',
                           ),
                         ),
-                        Text(' = ${provider.dice1 + provider.dice2}'),
+                        if (!provider.rolling)
+                          Text(' = ${provider.dice1 + provider.dice2}'),
                       ],
                     ),
                   )
                 else
-                  const SizedBox(
-                    height: 50,
-                    child: Text('.......'),
-                  ),
+                  const SizedBox(height: 50),
 
                 ///Tabuleiro
                 Expanded(

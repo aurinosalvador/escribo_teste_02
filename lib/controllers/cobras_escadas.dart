@@ -37,20 +37,30 @@ class CobrasEscadas with ChangeNotifier {
 
   int winnerPlayer = 0;
   int playingNow = 1;
+
+  bool rolling = false;
   int dice1 = 0;
   int dice2 = 0;
 
   bool isPlaying = false;
 
-  void _rollDices() {
+  Future<void> _rollDices() async {
     if (!isPlaying && winnerPlayer == 0) {
+      rolling = true;
+      notifyListeners();
+
       dice1 = Random().nextInt(6) + 1;
       dice2 = Random().nextInt(6) + 1;
+
+      await Future.delayed(const Duration(milliseconds: 2000));
+
+      rolling = false;
+      notifyListeners();
     }
   }
 
-  void playerAction() {
-    _rollDices();
+  Future<void> playerAction() async {
+    await _rollDices();
     play(dice1, dice2);
   }
 
