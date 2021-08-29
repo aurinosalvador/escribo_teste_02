@@ -35,7 +35,7 @@ class CobrasEscadas with ChangeNotifier {
   String messageTitle = '';
   String messageText = '';
 
-  int winnerPlayer = 0;
+  int winnerPlayer = 1;
   int playingNow = 1;
   int dice1 = 0;
   int dice2 = 0;
@@ -63,13 +63,13 @@ class CobrasEscadas with ChangeNotifier {
         //cobra
         messageTitle = 'Azar!';
         messageText = 'A cobra picou você, volte para a casa $moveTo';
-        closeMessage();
+        closeMessageTimed();
         // print('Snake Move to: $moveTo');
       } else {
         //escada
         messageTitle = 'Sorte!';
         messageText = 'Você encontrou uma escada, suba para a casa $moveTo';
-        closeMessage();
+        closeMessageTimed();
         // print('Ladder Move to: $moveTo');
       }
       actualPlayer.setPosition(moveTo);
@@ -93,7 +93,7 @@ class CobrasEscadas with ChangeNotifier {
           messageTitle = 'Vencedor!';
           messageText =
               'O ${playingNow == 1 ? 'Jogador 1' : 'Jogador 2'} venceu!';
-          closeMessage();
+          closeMessageTimed();
           await movePlayer(actualPlayer, moveTo);
         } else {
           await movePlayer(actualPlayer, moveTo);
@@ -107,19 +107,19 @@ class CobrasEscadas with ChangeNotifier {
           showMessage = true;
           messageTitle = 'Sorte!';
           messageText = 'Dados iguais, jogue novamente!';
-          closeMessage();
+          closeMessageTimed();
         }
       } else {
         showMessage = true;
-        messageText = 'O jogo acabou!';
-        closeMessage();
+        messageTitle = 'O jogo acabou!';
+        messageText = 'Deseja jogar novamente?';
       }
     } else {
       showMessage = true;
       messageTitle = 'Aguarde!';
       messageText =
           'O ${playingNow == 1 ? 'Jogador 1' : 'Jogador 2'} está na casa ${moveTo}!';
-      closeMessage();
+      closeMessageTimed();
     }
 
     notifyListeners();
@@ -140,9 +140,13 @@ class CobrasEscadas with ChangeNotifier {
   }
 
   void closeMessage() {
+    showMessage = false;
+    notifyListeners();
+  }
+
+  void closeMessageTimed() {
     Future.delayed(const Duration(milliseconds: 2000), () {
-      showMessage = false;
-      notifyListeners();
+      closeMessage();
     });
   }
 

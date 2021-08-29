@@ -178,7 +178,10 @@ class _HomeState extends State<Home> {
                     ),
                   )
                 else
-                  const Text('.......'),
+                  const SizedBox(
+                    height: 50,
+                    child: Text('.......'),
+                  ),
 
                 ///Tabuleiro
                 Expanded(
@@ -232,11 +235,34 @@ class _HomeState extends State<Home> {
                             ),
                           ),
 
-                          // if ()
                           AnimatedOpacity(
                             opacity: provider.showMessage ? 1.0 : 0.0,
                             duration: const Duration(milliseconds: 400),
                             child: AlertDialog(
+                              actions: [
+                                if (provider.winnerPlayer != 0)
+                                  ElevatedButton(
+                                    onPressed: () => provider.closeMessage(),
+                                    style: ElevatedButton.styleFrom(
+                                      primary: provider.getButtonColor(),
+                                    ),
+                                    child: const Text(
+                                      'Não',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                if (provider.winnerPlayer != 0)
+                                  ElevatedButton(
+                                    onPressed: () => provider.reset(),
+                                    style: ElevatedButton.styleFrom(
+                                      primary: provider.getButtonColor(),
+                                    ),
+                                    child: const Text(
+                                      'Sim',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                              ],
                               title: Text(
                                 provider.messageTitle,
                                 // 'teste',
