@@ -123,20 +123,6 @@ class _HomeState extends State<Home> {
     return Consumer<CobrasEscadas>(
       builder: (context, provider, _) {
         return Scaffold(
-          appBar: AppBar(
-            backgroundColor: provider.getButtonColor(),
-            title: Text(
-              'Cobras e Escadas',
-              style: GoogleFonts.lobster(fontSize: 24),
-            ),
-            centerTitle: true,
-            actions: [
-              IconButton(
-                onPressed: provider.reset,
-                icon: const Icon(Icons.refresh),
-              ),
-            ],
-          ),
           body: Container(
             width: double.infinity,
             height: double.infinity,

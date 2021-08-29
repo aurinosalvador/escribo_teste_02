@@ -28,14 +28,14 @@ class CobrasEscadas with ChangeNotifier {
     99: 80,
   };
 
-  Player jogador1 = Player(1, 0, Colors.deepPurple);
+  Player jogador1 = Player(1, 98, Colors.deepPurple);
   Player jogador2 = Player(2, 0, Colors.deepOrange);
 
   bool showMessage = false;
   String messageTitle = '';
   String messageText = '';
 
-  int winnerPlayer = 1;
+  int winnerPlayer = 0;
   int playingNow = 1;
   int dice1 = 0;
   int dice2 = 0;
@@ -86,21 +86,23 @@ class CobrasEscadas with ChangeNotifier {
         //Verify Player Movement
         if (moveTo > 100) {
           int afterLastSquare = moveTo - 100;
-          await movePlayer(actualPlayer, 100 - afterLastSquare);
+          print('moveTo: ${100 - afterLastSquare}');
+          await movePlayer(actualPlayer, 100 - afterLastSquare, true);
         } else if (moveTo == 100) {
+          await movePlayer(actualPlayer, moveTo, false);
           winnerPlayer = playingNow;
           showMessage = true;
           messageTitle = 'Vencedor!';
           messageText =
               'O ${playingNow == 1 ? 'Jogador 1' : 'Jogador 2'} venceu!';
           closeMessageTimed();
-          await movePlayer(actualPlayer, moveTo);
         } else {
-          await movePlayer(actualPlayer, moveTo);
+          await movePlayer(actualPlayer, moveTo, false);
         }
 
         hasSnakeOrLadder(actualPlayer);
 
+        ///TODO: mudar lugar da mensagem pra quando for igual exibir de imediato
         if (dice1 != dice2) {
           playingNow = playingNow == 1 ? 2 : 1;
         } else {
@@ -125,13 +127,27 @@ class CobrasEscadas with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> movePlayer(Player player, int to) async {
+  Future<void> movePlayer(Player player, int to, bool afterLast) async {
     isPlaying = true;
-    for (int i = player.getPosition(); i <= to; i++) {
-      player.setPosition(i);
-      notifyListeners();
-      await Future.delayed(const Duration(milliseconds: 800));
+    if (afterLast) {
+      for (int i = player.getPosition(); i <= 100; i++) {
+        player.setPosition(i);
+        notifyListeners();
+        await Future.delayed(Duration(milliseconds: i == 100 ? 100 : 800));
+      }
+      for (int i = 100; i >= to; i--) {
+        player.setPosition(i);
+        notifyListeners();
+        await Future.delayed(const Duration(milliseconds: 800));
+      }
+    } else {
+      for (int i = player.getPosition(); i <= to; i++) {
+        player.setPosition(i);
+        notifyListeners();
+        await Future.delayed(const Duration(milliseconds: 800));
+      }
     }
+
     isPlaying = false;
   }
 
